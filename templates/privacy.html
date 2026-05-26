@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy — Spenditure{% endblock %}
+
+{% block content %}
+
+<section class="legal-page">
+    <div class="legal-inner">
+        <h1 class="legal-title">Privacy Policy</h1>
+        <p class="legal-updated">Last updated: May 2026</p>
+
+        <div class="legal-section">
+            <h2>1. Data We Collect</h2>
+            <p>When you create an account and use Spenditure, we collect the following information:</p>
+            <ul>
+                <li><strong>Account information</strong> — your name and email address provided at registration.</li>
+                <li><strong>Expense data</strong> — amounts, categories, dates, and descriptions you enter.</li>
+                <li><strong>Usage data</strong> — basic server logs such as request timestamps and IP addresses, retained for security purposes.</li>
+            </ul>
+            <p>We do not collect payment information, government IDs, or any sensitive personal data beyond what you explicitly enter.</p>
+        </div>
+
+        <div class="legal-section">
+            <h2>2. How We Use Your Data</h2>
+            <p>Your data is used solely to provide the Service to you. Specifically, we use it to:</p>
+            <ul>
+                <li>Authenticate your account and keep it secure.</li>
+                <li>Store and display your expense records and summaries.</li>
+                <li>Improve the reliability and performance of the Service.</li>
+            </ul>
+            <p>We do not use your data for advertising, profiling, or any purpose beyond operating Spenditure for you.</p>
+        </div>
+
+        <div class="legal-section">
+            <h2>3. Data Storage</h2>
+            <p>Your data is stored on secured servers. We take reasonable technical and organisational measures to protect it against unauthorised access, loss, or disclosure.</p>
+            <p>You can request deletion of your account and all associated data at any time by contacting us. Upon a verified deletion request, your data will be permanently removed within 30 days.</p>
+        </div>
+
+        <div class="legal-section">
+            <h2>4. Third-Party Services</h2>
+            <p>Spenditure does not share your personal or financial data with third parties for commercial purposes. We may use the following categories of service providers to operate the platform:</p>
+            <ul>
+                <li><strong>Hosting providers</strong> — to run the application infrastructure.</li>
+                <li><strong>Error monitoring tools</strong> — to detect and fix technical issues, without exposing your personal data.</li>
+            </ul>
+            <p>Any third-party service we use is bound by confidentiality obligations and is not permitted to use your data for their own purposes.</p>
+        </div>
+
+        <div class="legal-section">
+            <h2>5. Contact Us</h2>
+            <p>If you have questions about this Privacy Policy, would like to access the data we hold about you, or want to request deletion of your account, please reach out via the contact information provided within the application.</p>
+            <p>For a full overview of your rights and responsibilities when using Spenditure, please also review our <a href="{{ url_for('terms') }}">Terms and Conditions</a>.</p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
