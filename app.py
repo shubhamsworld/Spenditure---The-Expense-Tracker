@@ -77,8 +77,9 @@ def login():
             return render_template("login.html")
 
         session.clear()
-        session["user_id"]   = user["id"]
-        session["user_name"] = user["name"]
+        session["user_id"]    = user["id"]
+        session["user_name"]  = user["name"]
+        session["user_email"] = user["email"]
         flash(f"Welcome back, {user['name']}!", "success")
         return redirect(url_for("dashboard"))
 
@@ -116,7 +117,42 @@ def logout():
 
 @app.route("/profile")
 def profile():
-    return "Profile page — coming in Step 4"
+    redir = require_login()
+    if redir:
+        return redir
+
+    name   = session.get("user_name", "")
+    parts  = name.strip().split()
+    initials = (parts[0][0] + (parts[-1][0] if len(parts) > 1 else "")).upper()
+
+    user = {
+        "name": name,
+        "email": session.get("user_email", ""),
+        "member_since": "January 2026",
+        "initials": initials,
+    }
+    stats = {
+        "total_spent": "₹5,669",
+        "transaction_count": 8,
+        "top_category": "Education",
+    }
+    expenses = [
+        {"date": "May 22", "description": "Clothing",         "category": "Shopping",       "amount": "₹1,500"},
+        {"date": "May 18", "description": "Movie + snacks",   "category": "Entertainment",  "amount": "₹800"},
+        {"date": "May 15", "description": "Pharmacy",         "category": "Health",         "amount": "₹250"},
+        {"date": "May 12", "description": "Online course",    "category": "Education",      "amount": "₹1,200"},
+        {"date": "May 10", "description": "Restaurant",       "category": "Food",           "amount": "₹450"},
+    ]
+    categories = [
+        {"name": "Shopping",      "amount": "₹1,500", "pct": 26},
+        {"name": "Bills",         "amount": "₹999",   "pct": 18},
+        {"name": "Education",     "amount": "₹1,200", "pct": 21},
+        {"name": "Entertainment", "amount": "₹800",   "pct": 14},
+        {"name": "Food",          "amount": "₹770",   "pct": 14},
+        {"name": "Health",        "amount": "₹250",   "pct": 4},
+        {"name": "Transport",     "amount": "₹150",   "pct": 3},
+    ]
+    return render_template("profile.html", user=user, stats=stats, expenses=expenses, categories=categories)
 
 
 @app.route("/expenses/add")
