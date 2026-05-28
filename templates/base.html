@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block head %}{% endblock %}
 </head>
-<body>
+<body{% if session.get("user_id") %} class="is-authenticated"{% endif %}>
 
     <nav class="navbar">
         <div class="nav-inner">
@@ -19,13 +19,22 @@
                 <span class="brand-name">Spenditure - The Expense Tracker</span>
             </a>
             <div class="nav-links">
-                <a href="{{ url_for('login') }}">Sign in</a>
-                <a href="{{ url_for('register') }}" class="nav-cta">Get started</a>
+                {% if session.get("user_id") %}
+                    <span class="nav-greeting">Welcome, {{ session.get("user_name", "").split()[0] }}</span>
+                    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                    <a href="{{ url_for('logout') }}" class="nav-cta">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Sign in</a>
+                    <a href="{{ url_for('register') }}" class="nav-cta">Get started</a>
+                {% endif %}
             </div>
         </div>
     </nav>
 
     <main class="main-content">
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
         {% block content %}{% endblock %}
     </main>
 

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — Spenditure{% endblock %}
+
+{% block content %}
+
+<section class="dashboard-section">
+    <div class="dashboard-inner">
+
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Welcome back, {{ session.get("user_name", "").split()[0] }}</h1>
+            <a href="{{ url_for('add_expense') }}" class="btn-primary">+ Add expense</a>
+        </div>
+
+        <div class="dash-stats">
+            <div class="dash-stat-card">
+                <span class="dash-stat-label">Total expenses</span>
+                <span class="dash-stat-value">₹0</span>
+                <span class="dash-stat-note dash-note-muted">all time</span>
+            </div>
+            <div class="dash-stat-card">
+                <span class="dash-stat-label">This month</span>
+                <span class="dash-stat-value">₹0</span>
+                <span class="dash-stat-note dash-note-muted">no data yet</span>
+            </div>
+            <div class="dash-stat-card">
+                <span class="dash-stat-label">Categories</span>
+                <span class="dash-stat-value">0</span>
+                <span class="dash-stat-note dash-note-muted">tracked</span>
+            </div>
+        </div>
+
+        <div class="dashboard-recent">
+            <h2 class="dashboard-section-title">Recent expenses</h2>
+            <div class="recent-empty">
+                <p>No expenses yet. <a href="{{ url_for('add_expense') }}">Add your first one.</a></p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

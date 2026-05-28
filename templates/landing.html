@@ -18,8 +18,12 @@
             Spenditure helps you log expenses, spot patterns, and stay on budget — without the spreadsheet headache.
         </p>
         <div class="hero-actions">
-            <a href="{{ url_for('register') }}" class="btn-hero-primary">Create free account</a>
-            <a href="#" id="open-how-it-works" class="btn-hero-secondary">See how it works</a>
+            {% if session.get("user_id") %}
+                <a href="{{ url_for('dashboard') }}" class="btn-hero-primary">Go to dashboard</a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn-hero-primary">Create free account</a>
+                <a href="#" id="open-how-it-works" class="btn-hero-secondary">See how it works</a>
+            {% endif %}
         </div>
     </div>
 
