@@ -2,6 +2,10 @@ import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import check_password_hash
 from database.db import get_db, init_db, seed_db, create_user, get_user_by_email
+from database.queries import (
+    get_user_by_id, get_summary_stats,
+    get_recent_transactions, get_category_breakdown,
+)
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-key-change-in-production"
@@ -121,36 +125,39 @@ def profile():
     if redir:
         return redir
 
-    name   = session.get("user_name", "")
-    parts  = name.strip().split()
-    initials = (parts[0][0] + (parts[-1][0] if len(parts) > 1 else "")).upper()
-
+    user_id = session["user_id"]
+    user_data = get_user_by_id(user_id) or {}
+    name = user_data.get("name", "")
+    parts = name.strip().split()
+    initials = (parts[0][0] + (parts[-1][0] if len(parts) > 1 else "")).upper() if parts else "?"
     user = {
         "name": name,
-        "email": session.get("user_email", ""),
-        "member_since": "January 2026",
+        "email": user_data.get("email", ""),
+        "member_since": user_data.get("member_since", ""),
         "initials": initials,
     }
+    raw = get_summary_stats(user_id)
     stats = {
-        "total_spent": "₹5,669",
-        "transaction_count": 8,
-        "top_category": "Education",
+        "total_spent": f"₹{raw['total_spent']:,.0f}",
+        "transaction_count": raw["transaction_count"],
+        "top_category": raw["top_category"],
     }
     expenses = [
-        {"date": "May 22", "description": "Clothing",         "category": "Shopping",       "amount": "₹1,500"},
-        {"date": "May 18", "description": "Movie + snacks",   "category": "Entertainment",  "amount": "₹800"},
-        {"date": "May 15", "description": "Pharmacy",         "category": "Health",         "amount": "₹250"},
-        {"date": "May 12", "description": "Online course",    "category": "Education",      "amount": "₹1,200"},
-        {"date": "May 10", "description": "Restaurant",       "category": "Food",           "amount": "₹450"},
+        {
+            "date": e["date"],
+            "description": e["description"],
+            "category": e["category"],
+            "amount": f"₹{e['amount']:,.0f}",
+        }
+        for e in get_recent_transactions(user_id)
     ]
     categories = [
-        {"name": "Shopping",      "amount": "₹1,500", "pct": 26},
-        {"name": "Bills",         "amount": "₹999",   "pct": 18},
-        {"name": "Education",     "amount": "₹1,200", "pct": 21},
-        {"name": "Entertainment", "amount": "₹800",   "pct": 14},
-        {"name": "Food",          "amount": "₹770",   "pct": 14},
-        {"name": "Health",        "amount": "₹250",   "pct": 4},
-        {"name": "Transport",     "amount": "₹150",   "pct": 3},
+        {
+            "name": c["name"],
+            "amount": f"₹{c['total']:,.0f}",
+            "pct": c["pct"],
+        }
+        for c in get_category_breakdown(user_id)
     ]
     return render_template("profile.html", user=user, stats=stats, expenses=expenses, categories=categories)
 
